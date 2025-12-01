@@ -1,0 +1,81 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int x) {
+        data = x;
+        left = right = NULL;
+    }
+};
+
+class BST {
+public:
+    Node* root;
+
+    BST() {
+        root = NULL;
+    }
+
+    Node* insert(Node* r, int x) {
+        if (!r) return new Node(x);
+        if (x < r->data) r->left = insert(r->left, x);
+        else if (x > r->data) r->right = insert(r->right, x);
+        return r;
+    }
+
+    Node* findMin(Node* r) {
+        while (r && r->left) r = r->left;
+        return r;
+    }
+
+    Node* remove(Node* r, int x) {
+        if (!r) return r;
+        if (x < r->data) r->left = remove(r->left, x);
+        else if (x > r->data) r->right = remove(r->right, x);
+        else {
+            if (!r->left && !r->right) return NULL;
+            else if (!r->left) return r->right;
+            else if (!r->right) return r->left;
+            Node* t = findMin(r->right);
+            r->data = t->data;
+            r->right = remove(r->right, t->data);
+        }
+        return r;
+    }
+
+    int maxDepth(Node* r) {
+        if (!r) return 0;
+        int a = maxDepth(r->left);
+        int b = maxDepth(r->right);
+        return 1 + (a > b ? a : b);
+    }
+
+    int minDepth(Node* r) {
+        if (!r) return 0;
+        int a = minDepth(r->left);
+        int b = minDepth(r->right);
+        if (!r->left || !r->right) return 1 + a + b;
+        return 1 + (a < b ? a : b);
+    }
+};
+
+int main() {
+    BST t;
+    t.root = t.insert(t.root, 20);
+    t.insert(t.root, 10);
+    t.insert(t.root, 30);
+    t.insert(t.root, 5);
+    t.insert(t.root, 15);
+    t.insert(t.root, 25);
+    t.insert(t.root, 35);
+
+    t.root = t.remove(t.root, 10);
+
+    cout << "Max Depth: " << t.maxDepth(t.root) << endl;
+    cout << "Min Depth: " << t.minDepth(t.root) << endl;
+}
