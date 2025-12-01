@@ -1,0 +1,77 @@
+#include <iostream>
+using namespace std;
+
+class BST {
+public:
+    int data;
+    BST* left;
+    BST* right;
+    BST(int x) {
+        data = x;
+        left = right = NULL;
+    }
+};
+
+class DLL {
+public:
+    int data;
+    DLL* prev;
+    DLL* next;
+    DLL(int x) {
+        data = x;
+        prev = next = NULL;
+    }
+};
+
+void inorder(BST* r, int arr[], int &i) {
+    if (r == NULL) return;
+    inorder(r->left, arr, i);
+    arr[i++] = r->data;
+    inorder(r->right, arr, i);
+}
+
+void sortArr(int arr[], int n) {
+    for (int a = 0; a < n-1; a++) {
+        for (int b = a+1; b < n; b++) {
+            if (arr[a] > arr[b]) {
+                int temp = arr[a];
+                arr[a] = arr[b];
+                arr[b] = temp;
+            }
+        }
+    }
+}
+
+DLL* makeDLL(int arr[], int n) {
+    if (n == 0) return NULL;
+
+    DLL* head = new DLL(arr[0]);
+    DLL* temp = head;
+
+    for (int i = 1; i < n; i++) {
+        DLL* nnode = new DLL(arr[i]);
+        temp->next = nnode;
+        nnode->prev = temp;
+
+        temp = nnode;
+    }
+    return head;
+}
+
+void printDLL(DLL* head) {
+    while (head != NULL) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+}
+
+int main() {
+    BST* root1 = new BST(4);
+    root1->left = new BST(2);
+    root1->right = new BST(6);
+
+    BST* root2 = new BST(5);
+    root2->left = new BST(3);
+    root2->right = new BST(7);
+
+    int
