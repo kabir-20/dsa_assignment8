@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int x) {
+        data = x;
+        left = right = NULL;
+    }
+};
+
+int findPos(int inorder[], int s, int e, int x) {
+    for (int i = s; i <= e; i++)
+        if (inorder[i] == x)
+            return i;
+    return -1;
+}
+
+Node* buildTree(int inorder[], int postorder[], int s, int e, int &postIdx) {
+    if (s > e) return NULL;
+
+    Node* root = new Node(postorder[postIdx]);
+    postIdx--;
+
+    if (s == e) return root;
+
+    int pos = findPos(inorder, s, e, root->data);
+
+    root->right = buildTree(inorder, postorder, pos + 1, e, postIdx);
+    root->left  = buildTree(inorder, postorder, s, pos - 1, postIdx);
+
+    return root;
+}
+
+void preorder(Node* r) {
+    if (!r) return;
+    cout << r->data << " ";
+    preorder(r->left);
+    preorder(r->right);
+}
+
+int main() {
