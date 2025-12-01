@@ -1,0 +1,53 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int x) {
+        data = x;
+        left = right = NULL;
+    }
+};
+
+class Tree {
+public:
+    Node* root;
+
+    Tree() {
+        root = NULL;
+    }
+
+    Node* insert(Node* r, int x) {
+        if (!r) return new Node(x);
+        if (x < r->data) r->left = insert(r->left, x);
+        else r->right = insert(r->right, x);
+        return r;
+    }
+
+    bool isBSTUtil(Node* r, int minVal, int maxVal) {
+        if (!r) return true;
+        if (r->data <= minVal || r->data >= maxVal) return false;
+        return isBSTUtil(r->left, minVal, r->data) &&
+               isBSTUtil(r->right, r->data, maxVal);
+    }
+
+    bool isBST() {
+        return isBSTUtil(root, -1000000, 1000000);
+    }
+};
+
+int main() {
+    Tree t;
+    t.root = t.insert(t.root, 20);
+    t.insert(t.root, 10);
+    t.insert(t.root, 30);
+    t.insert(t.root, 5);
+    t.insert(t.root, 15);
+
+    if (t.isBST()) cout << "Tree is a BST";
+    else cout << "Tree is NOT a BST";
+}
